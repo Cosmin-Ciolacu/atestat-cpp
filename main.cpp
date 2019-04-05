@@ -9,7 +9,7 @@ MYSQL* conn;
 int query_state;
 const int width = 20;
 const int height = 20;
-int x, y, fructX, fructY, pct = 0;
+int x, y, fructX, fructY, pct = 10;
 int coadaX[100], coadaY[100];
 int ncozi;
 enum eDirecton { STOP = 0, LEFT, RIGHT, UP, DOWN};
@@ -216,7 +216,18 @@ void logic()
 }
 void afis_clasament()
 {
-    cout << "clasament";
+   // cout << "clasament";
+   MYSQL_ROW row;
+   MYSQL_RES* res;
+   int qs = mysql_query(conn, "SELECT * FROM punctaje");
+   if(!qs)
+   {
+       res = mysql_store_result(conn);
+       while(row = mysql_fetch_row(res))
+       {
+           cout<<row[1]<<"......"<<row[2]<<endl;
+       }
+   }
 }
 int main()
 {
