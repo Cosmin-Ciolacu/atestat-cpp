@@ -181,7 +181,7 @@ void actualizare_pct(string nume)
 {
 
     // actualizare in db
-    MYSQL_RES *rez;
+    //MYSQL_RES *rez;
     char pnct[5] = {NULL};
     int i = 0;
     while(pct>0)
@@ -191,7 +191,7 @@ void actualizare_pct(string nume)
         pnct[i] = char(48+uc);
         i++;
     }
-    int j;
+    unsigned j;
     for(j = 0;j<strlen(pnct);j++)
         swap(pnct[j],pnct[strlen(pnct) - 1]);
     string str_query = "UPDATE punctaje SET pct='" + string(pnct) + "' WHERE nume='" + nume + "'";
@@ -214,7 +214,7 @@ void logic()
         //actualizare_pct(nume);
     }
 }
-void afis_clasament()
+void afis_clasament(string nume)
 {
    // cout << "clasament";
    MYSQL_ROW row;
@@ -225,7 +225,21 @@ void afis_clasament()
        res = mysql_store_result(conn);
        while(row = mysql_fetch_row(res))
        {
-           cout<<row[1]<<"......"<<row[2]<<endl;
+           //cout<<row[1]<<"......"<<row[2]<<endl;
+
+           if(row[1] == nume)
+           {
+               HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+               SetConsoleTextAttribute(hConsole, 10);
+               cout<<row[1]<<"......"<<row[2]<<endl;
+           }
+           else
+           {
+               HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+               SetConsoleTextAttribute(hConsole, 7);
+               cout<<row[1]<<"......"<<row[2]<<endl;
+           }
+
        }
    }
 }
@@ -252,7 +266,7 @@ int main()
                 {
                     actualizare_pct(nume);
                     Sleep(2000);
-                    afis_clasament();
+                    afis_clasament(nume);
                 }
             }
          else
