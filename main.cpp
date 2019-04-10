@@ -219,7 +219,8 @@ void afis_clasament(string nume)
    // cout << "clasament";
    MYSQL_ROW row;
    MYSQL_RES* res;
-   int qs = mysql_query(conn, "SELECT * FROM punctaje");
+   HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+   int qs = mysql_query(conn, "SELECT * FROM punctaje order by pct desc");
    if(!qs)
    {
        res = mysql_store_result(conn);
@@ -229,13 +230,15 @@ void afis_clasament(string nume)
 
            if(row[1] == nume)
            {
-               HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
                SetConsoleTextAttribute(hConsole, 10);
                cout<<row[1]<<"......"<<row[2]<<endl;
            }
            else
            {
-               HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+               SetConsoleTextAttribute(hConsole, 7);
+               SetConsoleTextAttribute(hConsole, 7);
+               SetConsoleTextAttribute(hConsole, 7);
                SetConsoleTextAttribute(hConsole, 7);
                cout<<row[1]<<"......"<<row[2]<<endl;
            }
