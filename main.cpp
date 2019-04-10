@@ -9,7 +9,7 @@ MYSQL* conn;
 int query_state;
 const int width = 20;
 const int height = 20;
-int x, y, fructX, fructY, pct = 10;
+int x, y, fructX, fructY, pct = 0;
 int coadaX[100], coadaY[100];
 int ncozi;
 enum eDirecton { STOP = 0, LEFT, RIGHT, UP, DOWN};
@@ -67,8 +67,9 @@ void deseneaza()
     for (int i = 0; i < width+2; i++)
         cout << "#";
     cout << endl;
+    cout<<"Pentru a controla jocul folositi tastele W,A,S,D"<<endl;
     cout << "pentru a opri jocul apasa tasta Q" << endl;
-    cout << "punctaj optinut" << pct;
+    cout << "Punctaj optinut " << pct;
 }
 bool con_to_db()
 {
@@ -198,7 +199,7 @@ void actualizare_pct(string nume)
     const char *q = str_query.c_str();
     query_state = mysql_query(conn, q);
    if(!query_state)
-      cout<<"ai optinut punctajul: "<<string(pnct)<<" punctaj actualizat";
+      cout<<" Punctaj actualizat."<<" "<<"Scorul tau final este: "<<string(pnct);
    else
       cout<<"eroare"<<mysql_error(conn);
     cout<<endl;
@@ -220,10 +221,11 @@ void afis_clasament(string nume)
    MYSQL_ROW row;
    MYSQL_RES* res;
    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-   int qs = mysql_query(conn, "SELECT * FROM punctaje order by pct desc");
+   int qs = mysql_query(conn, "SELECT * FROM punctaje order by pct desc limit 15");
    if(!qs)
    {
        res = mysql_store_result(conn);
+       int a = 1;
        while(row = mysql_fetch_row(res))
        {
            //cout<<row[1]<<"......"<<row[2]<<endl;
@@ -232,18 +234,16 @@ void afis_clasament(string nume)
            {
 
                SetConsoleTextAttribute(hConsole, 10);
-               cout<<row[1]<<"......"<<row[2]<<endl;
+               cout<<a<<"."<<row[1]<<"......"<<row[2]<<endl;
            }
            else
            {
                SetConsoleTextAttribute(hConsole, 7);
-               SetConsoleTextAttribute(hConsole, 7);
-               SetConsoleTextAttribute(hConsole, 7);
-               SetConsoleTextAttribute(hConsole, 7);
-               cout<<row[1]<<"......"<<row[2]<<endl;
+               cout<<a<<"."<<row[1]<<"......"<<row[2]<<endl;
            }
-
+           a++;
        }
+       SetConsoleTextAttribute(hConsole, 7);
    }
 }
 int main()
@@ -275,7 +275,10 @@ int main()
          else
             cout<<"numele introdus exista deja"<<endl;
     } else
-        cout<<"EROARE DE CONECTARE";
+    {
+        cout<<"EROARE DE CONECTARE"<<endl;
+        cout<<mysql_error(conn);
+    }
     return 0;
 }
 
